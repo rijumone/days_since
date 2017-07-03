@@ -1,0 +1,61 @@
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<body ng-app="app">
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css">
+		body  {
+			text-align: center;
+			/*color: white;*/
+			font-size: 400% !important;
+		}
+		@media (min-width: 1080px) {
+		    p {
+		        font-size: 400% !important;
+		    }
+		}
+	</style>
+
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.1/angular-route.min.js"></script>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-6">
+				<img class="img-responsive" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/No_smoking_symbol.svg/1024px-No_smoking_symbol.svg.png">
+				<div ng-view></div>
+
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		var app = angular.module("app",["ngRoute"]);
+
+		app.controller("mainCtrl", function($scope, $http){
+			// $scope.n = 0;
+			$http.get("n.txt")
+				.then(function(response){
+					$scope.n = 	response.data;
+					var earlierDate = new Date(response.data);
+					var currDate = new Date();
+					diff = currDate - earlierDate;
+
+					$scope.hours = Math.floor(diff / (1000 * 60 * 60));
+					$scope.minutes =  Math.floor((diff - ($scope.hours*1000*60*60))/(1000*60));
+					$scope.seconds =  Math.floor((diff - ($scope.hours*1000*60*60) - ($scope.minutes*1000*60))/(1000));
+
+				});
+			$scope.s = ($scope.n > 1) ? "s" : "";
+
+		});
+
+		app.config(function($routeProvider){
+			$routeProvider
+				.when("/",{
+					templateUrl : "main.htm",
+					controller: "mainCtrl"
+				});
+		});
+	</script>
+</body>
