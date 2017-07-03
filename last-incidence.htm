@@ -36,14 +36,24 @@
 			// $scope.n = 0;
 			$http.get("n.txt")
 				.then(function(response){
+					console.log(response.data);
+					// response.data = "2017-07-02 23:14:08";
 					$scope.n = 	response.data;
+					
 					var earlierDate = new Date(response.data);
 					var currDate = new Date();
 					diff = currDate - earlierDate;
-
-					$scope.hours = Math.floor(diff / (1000 * 60 * 60));
-					$scope.minutes =  Math.floor((diff - ($scope.hours*1000*60*60))/(1000*60));
-					$scope.seconds =  Math.floor((diff - ($scope.hours*1000*60*60) - ($scope.minutes*1000*60))/(1000));
+// console.log(new Date(diff).getFullYear());
+// console.log(new Date(diff).getHours());
+// console.log(new Date(diff).getMinutes());
+// console.log(new Date(diff).getSeconds());
+					$scope.years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+					$scope.months = Math.floor((diff - $scope.years * (1000 * 60 * 60 * 24 * 365))/ (1000 * 60 * 60 * 24 * 30));
+					$scope.weeks = Math.floor((diff - (12 * $scope.years + $scope.months) * 30 * 24 * 60 * 60 * 1000) / (1000 * 60 * 60 * 24 * 7));
+					$scope.days = Math.floor((diff - ($scope.years*1000*60*60*24*365) - ($scope.months*1000*60*60*24*30) - ($scope.weeks*1000*60*60*24*7)) / (1000 * 60 * 60 * 24));
+					$scope.hours = Math.floor((diff - ($scope.days * 60 * 60 * 1000)) / (1000 * 60 * 60));
+					$scope.minutes =  Math.floor((diff - (Math.floor(diff / (1000 * 60 * 60))*1000*60*60))/(1000*60));
+					$scope.seconds =  Math.floor((diff - (Math.floor(diff / (1000 * 60 * 60))*1000*60*60) - (Math.floor((diff - (Math.floor(diff / (1000 * 60 * 60))*1000*60*60))/(1000*60))*1000*60))/(1000));
 
 				});
 			$scope.s = ($scope.n > 1) ? "s" : "";
